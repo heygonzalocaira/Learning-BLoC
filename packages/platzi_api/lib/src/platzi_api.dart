@@ -64,8 +64,7 @@ class DataPlatziApiClient {
   }
 
   Future<Product> simpleProduct({required int index}) async {
-    final uri = Uri.http(endPoint, "/api/v1/products/$index");
-    print(uri);
+    final uri = Uri.http(endPoint, '/api/v1/products/$index');
     return _fecthProduct(uri);
   }
 
@@ -96,7 +95,7 @@ class DataPlatziApiClient {
 
   // Functions to get categories
   Future<List<Category>> categories() async {
-    final uri = Uri.http(endPoint, "/api/v1/categories");
+    final uri = Uri.http(endPoint, '/api/v1/categories');
     return _fecthCategories(uri);
   }
 
@@ -128,7 +127,7 @@ class DataPlatziApiClient {
 
   // Function to get Users
   Future<List<User>> users() async {
-    final uri = Uri.http(endPoint, "/api/v1/users");
+    final uri = Uri.http(endPoint, '/api/v1/users');
     return _fecthUsers(uri);
   }
 

@@ -18,11 +18,32 @@ class SimpleProductHttpRequestFailure extends PlatziException {
   ) : super(failure, stackTrace: stackTrace);
 }
 
-class AllProductsException extends PlatziException {
-  AllProductsException(
-    dynamic exception, {
+class AllProductsHttpException extends PlatziException {
+  AllProductsHttpException(
+    HttpException exception, {
     required StackTrace stackTrace,
   }) : super(exception, stackTrace: stackTrace);
+}
+
+class AllProductsHttpRequestFailure extends PlatziException {
+  AllProductsHttpRequestFailure(
+    HttpRequestFailure failure, {
+    required StackTrace stackTrace,
+  }) : super(failure, stackTrace: stackTrace);
+}
+
+class AllProductsJsonDecodeException extends PlatziException {
+  AllProductsJsonDecodeException(
+    JsonDecodeException jsonDecodeException, {
+    required StackTrace stackTrace,
+  }) : super(jsonDecodeException, stackTrace: stackTrace);
+}
+
+class AllProductsJsonDeserializationException extends PlatziException {
+  AllProductsJsonDeserializationException(
+    JsonDeserializationException jsonDeserializationException, {
+    required StackTrace stackTrace,
+  }) : super(jsonDeserializationException, stackTrace: stackTrace);
 }
 
 class PlatziRepository {
@@ -48,9 +69,15 @@ class PlatziRepository {
     try {
       products = await _dataPlatziApiClient.products();
     } on HttpException catch (e, stackTrace) {
-      throw AllProductsException(e, stackTrace: stackTrace);
+      throw AllProductsHttpException(e, stackTrace: stackTrace);
     } on HttpRequestFailure catch (e, stackTrace) {
-      throw AllProductsException(e, stackTrace: stackTrace);
+      throw AllProductsHttpRequestFailure(e, stackTrace: stackTrace);
+    } on JsonDecodeException catch (e, stackTrace) {
+      throw AllProductsJsonDecodeException(e, stackTrace: stackTrace);
+    } on JsonDeserializationException catch (e, stackTrace) {
+      throw AllProductsJsonDeserializationException(e, stackTrace: stackTrace);
+    } on Exception catch (e) {
+      throw Exception(e);
     }
     return products.map((product) => product.description).toList();
   }

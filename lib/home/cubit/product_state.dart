@@ -6,27 +6,26 @@ class ProductState extends Equatable {
   final ProductStatus status;
   final List<Product> products;
   final String errorMessage;
-  ProductState({
+  final StackTrace? stackTrace;
+  const ProductState({
     this.status = ProductStatus.loading,
     this.products = const <Product>[],
     this.errorMessage = "",
+    this.stackTrace,
   });
   ProductState copyWith({
     ProductStatus? status,
     List<Product>? products,
     String? errorMessage,
+    StackTrace? stackTrace,
   }) {
     return ProductState(
-        status: status ?? this.status,
-        products: products ?? this.products,
-        errorMessage: errorMessage ?? this.errorMessage);
+      status: status ?? this.status,
+      products: products ?? this.products,
+      errorMessage: errorMessage ?? this.errorMessage,
+      stackTrace: stackTrace ?? this.stackTrace,
+    );
   }
-
-  //ProductState.loading() : this._();
-  //ProductState.success({
-  //  required List<Product> products,
-  //}) : this._(status: ProductStatus.success, products: products);
-  //ProductState.failure() : this._(status: ProductStatus.failure);
 
   @override
   List<Object?> get props => [status, products];

@@ -1,4 +1,7 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:bloc_app/home/cubit/product_cubit.dart';
+import 'package:bloc_app/home/models/product.dart';
 import 'package:bloc_app/home/widget/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +15,7 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           ProductCubit(context.read<PlatziRepository>())..getProducts(),
-      child: HomeView(title: "Example"),
+      child: const HomeView(title: "BloC Concepts"),
     );
   }
 }
@@ -34,17 +37,12 @@ class HomeView extends StatelessWidget {
             case ProductStatus.loading:
               return const _ProductsLoading();
             case ProductStatus.success:
-              return ListView.builder(
-                itemCount: state.products.length,
-                itemBuilder: (context, index) {
-                  return ProductCard(
-                    title: "Title Fake",
-                    description: state.products[index].description,
-                  );
-                },
-              );
+              return _ProductSuccess(products: state.products);
             default:
-              return _ProductsFailure(error: state.errorMessage);
+              return _ProductsFailure(
+                error: state.errorMessage,
+                stackTrace: state.stackTrace.toString(),
+              );
           }
         },
       ),
@@ -52,16 +50,38 @@ class HomeView extends StatelessWidget {
   }
 }
 
+class _ProductSuccess extends StatelessWidget {
+  const _ProductSuccess({
+    Key? key,
+    required this.products,
+  }) : super(key: key);
+  final List<Product> products;
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        return ProductCard(
+          title: "Title Fake",
+          description: products[index].description,
+        );
+      },
+    );
+  }
+}
+
 class _ProductsFailure extends StatelessWidget {
   const _ProductsFailure({
     required this.error,
+    required this.stackTrace,
     Key? key,
   }) : super(key: key);
   final String error;
+  final String stackTrace;
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text("Error $error"),
+      child: Text("Error $error | $stackTrace"),
     );
   }
 }
