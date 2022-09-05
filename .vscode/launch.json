@@ -1,0 +1,65 @@
+{
+    // Use IntelliSense para saber los atributos posibles.
+    // Mantenga el puntero para ver las descripciones de los existentes atributos.
+    // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "bloc_app",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "bloc_app (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "bloc_app (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "platzi_api",
+            "cwd": "packages\\platzi_api",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "platzi_api (profile mode)",
+            "cwd": "packages\\platzi_api",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "platzi_api (release mode)",
+            "cwd": "packages\\platzi_api",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "platzi_repository",
+            "cwd": "packages\\platzi_repository",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "platzi_repository (profile mode)",
+            "cwd": "packages\\platzi_repository",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "platzi_repository (release mode)",
+            "cwd": "packages\\platzi_repository",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
