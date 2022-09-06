@@ -61,7 +61,8 @@ class PlatziRepository {
       : _dataPlatziApiClient = dataPlatziApiClient ?? DataPlatziApiClient();
 
   final DataPlatziApiClient _dataPlatziApiClient;
-
+  List<String> get products => _productsDescription;
+  List<String> _productsDescription = [];
   // Return a description of a product
   Future<String> simpleProductDescription({required int index}) async {
     try {
@@ -77,6 +78,7 @@ class PlatziRepository {
     List<Product> products;
     try {
       products = await _dataPlatziApiClient.products();
+      return products.map((product) => product.description).toList();
     } on HttpException catch (e, stackTrace) {
       throw AllProductsHttpException(e, stackTrace: stackTrace);
     } on HttpRequestFailure catch (e, stackTrace) {
@@ -88,14 +90,21 @@ class PlatziRepository {
     } on Exception catch (e) {
       throw Exception(e);
     }
-    return products.map((product) => product.description).toList();
   }
 
   // Return a range of products
-  Future<List<String>> rangeProducts(String offset, String limit) async {
+  Future<List<String>> rangeProducts() async {
     List<Product> products;
     try {
-      products = await _dataPlatziApiClient.rangeProducts(offset, limit);
+      products =
+          await _dataPlatziApiClient.rangeProducts(_productsDescription.length);
+      //_productsDescription = [
+      //  ..._productsDescription,
+      //  ...products.map((product) => product.description).toList()
+      //];
+      _productsDescription
+          .addAll(products.map((product) => product.description).toList());
+      return _productsDescription;
     } on HttpException catch (e, stackTrace) {
       throw AllProductsHttpException(e, stackTrace: stackTrace);
     } on HttpRequestFailure catch (e, stackTrace) {
@@ -107,6 +116,5 @@ class PlatziRepository {
     } on Exception catch (e) {
       throw Exception(e);
     }
-    return products.map((product) => product.description).toList();
   }
 }

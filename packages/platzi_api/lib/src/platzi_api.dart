@@ -30,7 +30,7 @@ class DataPlatziApiClient {
   DataPlatziApiClient({http.Client? httpClient})
       : _httpClient = httpClient ?? http.Client();
 
-  String endPoint = "api.escuelajs.co";
+  String endPoint = 'api.escuelajs.co';
   final http.Client _httpClient;
 
   Future<List<Product>> products() async {
@@ -38,9 +38,9 @@ class DataPlatziApiClient {
     return _fecthProducts(uri);
   }
 
-  Future<List<Product>> rangeProducts(String offset, String limit) async {
-    final queryParams = <String, String>{'offset': offset}
-      ..addAll({'limit': limit});
+  Future<List<Product>> rangeProducts(int offset) async {
+    final queryParams = <String, String>{'offset': offset.toString()}
+      ..addAll({'limit': '20'});
     final uri = Uri.http(endPoint, '/api/v1/products', queryParams);
     return _fecthProducts(uri);
   }

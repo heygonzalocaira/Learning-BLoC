@@ -14,8 +14,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProductCubit(context.read<PlatziRepository>())
-        ..getRangeProducts(0, 6),
+      create: (context) =>
+          ProductCubit(context.read<PlatziRepository>())..getRangeProducts(),
       //ProductCubit(context.read<PlatziRepository>())..getProducts(),
       child: const HomeView(title: "BloC Concepts"),
     );
@@ -34,9 +34,12 @@ class HomeView extends StatelessWidget {
         title: Text(title),
       ),
       body: BlocBuilder<ProductCubit, ProductState>(
+        buildWhen: ((previous, current) {
+          return current.status != ProductStatus.loading;
+        }),
         builder: (context, state) {
           switch (state.status) {
-            case ProductStatus.loading:
+            case ProductStatus.initial:
               return const _ProductsLoading();
             case ProductStatus.success:
               return _ProductSuccess(products: state.products);
@@ -61,53 +64,42 @@ class _ProductSuccess extends StatefulWidget {
 }
 
 class _ProductSuccessState extends State<_ProductSuccess> {
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  GlobalKey _contentKey = GlobalKey();
-  GlobalKey _refresherKey = GlobalKey();
-
-  Widget buildList() {
-    return ListView.builder(
-      itemCount: widget.products.length,
-      itemBuilder: (context, index) {
-        return ProductCard(
-          title: "Title Fake",
-          description: widget.products[index].description,
-        );
-      },
-    );
-  }
+  final GlobalKey _refresherKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    return SmartRefresher(
-      key: _refresherKey,
-      controller: _refreshController,
-      enablePullDown: true,
-      enablePullUp: true,
-      footer: const ClassicFooter(
-        completeDuration: Duration(microseconds: 500),
-        loadStyle: LoadStyle.ShowWhenLoading,
+    return BlocListener<ProductCubit, ProductState>(
+      listener: (context, state) {
+        if (state.status == ProductStatus.success) {
+          _refreshController.loadComplete();
+        }
+      },
+      child: SmartRefresher(
+        key: _refresherKey,
+        controller: _refreshController,
+        enablePullDown: false,
+        enablePullUp: true,
+        onLoading: () async {
+          await Future.delayed(const Duration(seconds: 1));
+          await context.read<ProductCubit>().getRangeProducts();
+          //if (mounted) {
+          //  setState(() {
+          //    _refreshController.loadComplete();
+          //  });
+          //}
+        },
+        child: ListView.builder(
+          itemCount: widget.products.length,
+          itemBuilder: (context, index) {
+            return ProductCard(
+              title: "Number $index",
+              description: widget.products[index].description,
+            );
+          },
+        ),
       ),
-      onRefresh: () async {
-        await Future.delayed(const Duration(microseconds: 1000));
-        context.read<PlatziRepository>().rangeProducts("0", "12");
-        if (mounted) {
-          setState(() {
-            _refreshController.refreshCompleted();
-          });
-        }
-      },
-      onLoading: () async {
-        await Future.delayed(const Duration(microseconds: 1000));
-        context.read<PlatziRepository>().rangeProducts("0", "12");
-        if (mounted) {
-          setState(() {
-            _refreshController.loadComplete();
-          });
-        }
-      },
-      child: buildList(),
     );
   }
 }

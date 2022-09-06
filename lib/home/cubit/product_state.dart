@@ -1,13 +1,13 @@
 part of 'product_cubit.dart';
 
-enum ProductStatus { loading, success, failure }
+enum ProductStatus { initial, loading, success, failure }
 
 class ProductState extends Equatable {
   final ProductStatus status;
   final List<Product> products;
   final String errorMessage;
   const ProductState({
-    this.status = ProductStatus.loading,
+    this.status = ProductStatus.initial,
     this.products = const <Product>[],
     this.errorMessage = "",
   });

@@ -46,12 +46,13 @@ class ProductCubit extends Cubit<ProductState> {
     }
   }
 
-  Future<void> getRangeProducts(int offset, int limit) async {
-    emit(state.copyWith(status: ProductStatus.loading));
+  Future<void> getRangeProducts() async {
+    if (state.status != ProductStatus.initial) {
+      emit(state.copyWith(status: ProductStatus.loading));
+    }
     try {
-      final results = await _platziRepository.rangeProducts(
-          offset.toString(), limit.toString());
-      final productsDescription = results.map(Product.new).toList();
+      final results = await _platziRepository.rangeProducts();
+      final productsDescription = results.map((item) => Product(item)).toList();
 
       emit(state.copyWith(
           status: ProductStatus.success, products: productsDescription));
