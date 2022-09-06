@@ -45,4 +45,41 @@ class ProductCubit extends Cubit<ProductState> {
       ));
     }
   }
+
+  Future<void> getRangeProducts(int offset, int limit) async {
+    emit(state.copyWith(status: ProductStatus.loading));
+    try {
+      final results = await _platziRepository.rangeProducts(
+          offset.toString(), limit.toString());
+      final productsDescription = results.map(Product.new).toList();
+
+      emit(state.copyWith(
+          status: ProductStatus.success, products: productsDescription));
+    } on AllProductsHttpException catch (error) {
+      emit(state.copyWith(
+        status: ProductStatus.failure,
+        errorMessage: error.toString(),
+      ));
+    } on AllProductsHttpRequestFailure catch (error) {
+      emit(state.copyWith(
+        status: ProductStatus.failure,
+        errorMessage: error.toString(),
+      ));
+    } on AllProductsJsonDecodeException catch (error) {
+      emit(state.copyWith(
+        status: ProductStatus.failure,
+        errorMessage: error.toString(),
+      ));
+    } on AllProductsJsonDeserializationException catch (error) {
+      emit(state.copyWith(
+        status: ProductStatus.failure,
+        errorMessage: error.toString(),
+      ));
+    } on Exception catch (error) {
+      emit(state.copyWith(
+        status: ProductStatus.failure,
+        errorMessage: error.toString(),
+      ));
+    }
+  }
 }

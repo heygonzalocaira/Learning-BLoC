@@ -90,4 +90,23 @@ class PlatziRepository {
     }
     return products.map((product) => product.description).toList();
   }
+
+  // Return a range of products
+  Future<List<String>> rangeProducts(String offset, String limit) async {
+    List<Product> products;
+    try {
+      products = await _dataPlatziApiClient.rangeProducts(offset, limit);
+    } on HttpException catch (e, stackTrace) {
+      throw AllProductsHttpException(e, stackTrace: stackTrace);
+    } on HttpRequestFailure catch (e, stackTrace) {
+      throw AllProductsHttpRequestFailure(e, stackTrace: stackTrace);
+    } on JsonDecodeException catch (e, stackTrace) {
+      throw AllProductsJsonDecodeException(e, stackTrace: stackTrace);
+    } on JsonDeserializationException catch (e, stackTrace) {
+      throw AllProductsJsonDeserializationException(e, stackTrace: stackTrace);
+    } on Exception catch (e) {
+      throw Exception(e);
+    }
+    return products.map((product) => product.description).toList();
+  }
 }
