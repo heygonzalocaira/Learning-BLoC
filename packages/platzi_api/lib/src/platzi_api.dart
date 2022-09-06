@@ -58,7 +58,7 @@ class DataPlatziApiClient {
       return body
           .map((dynamic item) => Product.fromJson(item as Map<String, dynamic>))
           .toList();
-    } on Exception {
+    } catch (e) {
       throw JsonDeserializationException();
     }
   }

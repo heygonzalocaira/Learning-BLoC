@@ -39,10 +39,7 @@ class HomeView extends StatelessWidget {
             case ProductStatus.success:
               return _ProductSuccess(products: state.products);
             default:
-              return _ProductsFailure(
-                error: state.errorMessage,
-                stackTrace: state.stackTrace.toString(),
-              );
+              return _ProductsFailure(error: state.errorMessage);
           }
         },
       ),
@@ -73,15 +70,13 @@ class _ProductSuccess extends StatelessWidget {
 class _ProductsFailure extends StatelessWidget {
   const _ProductsFailure({
     required this.error,
-    required this.stackTrace,
     Key? key,
   }) : super(key: key);
   final String error;
-  final String stackTrace;
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text("Error $error | $stackTrace"),
+      child: Text("Error in $error"),
     );
   }
 }

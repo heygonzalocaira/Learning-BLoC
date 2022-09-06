@@ -15,15 +15,34 @@ class ProductCubit extends Cubit<ProductState> {
     try {
       final results = await _platziRepository.allProducts();
       final productsDescription = results.map(Product.new).toList();
-      throw Exception();
+
       emit(state.copyWith(
           status: ProductStatus.success, products: productsDescription));
-      //throw  PlatziException("", stackTrace: StackTrace);
-    } on Exception catch (error, stackTrace) {
+    } on AllProductsHttpException catch (error) {
       emit(state.copyWith(
-          status: ProductStatus.failure,
-          errorMessage: error.toString(),
-          stackTrace: stackTrace));
+        status: ProductStatus.failure,
+        errorMessage: error.toString(),
+      ));
+    } on AllProductsHttpRequestFailure catch (error) {
+      emit(state.copyWith(
+        status: ProductStatus.failure,
+        errorMessage: error.toString(),
+      ));
+    } on AllProductsJsonDecodeException catch (error) {
+      emit(state.copyWith(
+        status: ProductStatus.failure,
+        errorMessage: error.toString(),
+      ));
+    } on AllProductsJsonDeserializationException catch (error) {
+      emit(state.copyWith(
+        status: ProductStatus.failure,
+        errorMessage: error.toString(),
+      ));
+    } on Exception catch (error) {
+      emit(state.copyWith(
+        status: ProductStatus.failure,
+        errorMessage: error.toString(),
+      ));
     }
   }
 }

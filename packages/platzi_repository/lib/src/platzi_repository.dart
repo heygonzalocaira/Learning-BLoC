@@ -18,6 +18,15 @@ class SimpleProductHttpRequestFailure extends PlatziException {
   ) : super(failure, stackTrace: stackTrace);
 }
 
+class MessageException implements Exception {
+  MessageException(
+    this.messsage,
+    this.exception,
+  );
+  final String messsage;
+  final dynamic exception;
+}
+
 class AllProductsHttpException extends PlatziException {
   AllProductsHttpException(
     HttpException exception, {
