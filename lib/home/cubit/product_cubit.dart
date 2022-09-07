@@ -52,8 +52,17 @@ class ProductCubit extends Cubit<ProductState> {
     }
     try {
       final results = await _platziRepository.rangeProducts();
-      final productsDescription = results.map((item) => Product(item)).toList();
-
+      List<Product> productsDescription =
+          results.map((item) => Product(item)).toList();
+      //productsDescription = [];
+      if (productsDescription.isEmpty) {
+        emit(state.copyWith(status: ProductStatus.sucessEmpty));
+        return;
+      }
+      //if (productsDescription.isNotEmpty) {
+      //  emit(state.copyWith(status: ProductStatus.failureLoadingMore));
+      //  return;
+      //}
       emit(state.copyWith(
           status: ProductStatus.success, products: productsDescription));
     } on AllProductsHttpException catch (error) {

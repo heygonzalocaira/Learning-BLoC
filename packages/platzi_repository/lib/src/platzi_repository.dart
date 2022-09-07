@@ -98,13 +98,8 @@ class PlatziRepository {
     try {
       products =
           await _dataPlatziApiClient.rangeProducts(_productsDescription.length);
-      //_productsDescription = [
-      //  ..._productsDescription,
-      //  ...products.map((product) => product.description).toList()
-      //];
       _productsDescription
           .addAll(products.map((product) => product.description).toList());
-      return _productsDescription;
     } on HttpException catch (e, stackTrace) {
       throw AllProductsHttpException(e, stackTrace: stackTrace);
     } on HttpRequestFailure catch (e, stackTrace) {
@@ -116,5 +111,6 @@ class PlatziRepository {
     } on Exception catch (e) {
       throw Exception(e);
     }
+    return _productsDescription;
   }
 }

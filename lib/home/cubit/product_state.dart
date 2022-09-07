@@ -1,6 +1,13 @@
 part of 'product_cubit.dart';
 
-enum ProductStatus { initial, loading, success, failure }
+enum ProductStatus {
+  initial,
+  loading,
+  success,
+  failure,
+  sucessEmpty,
+  failureLoadingMore,
+}
 
 class ProductState extends Equatable {
   final ProductStatus status;

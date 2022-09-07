@@ -35,7 +35,8 @@ class HomeView extends StatelessWidget {
       ),
       body: BlocBuilder<ProductCubit, ProductState>(
         buildWhen: ((previous, current) {
-          return current.status != ProductStatus.loading;
+          return current.status != ProductStatus.loading; // &&
+          //current.status == ProductStatus.failureLoadingMore;
         }),
         builder: (context, state) {
           switch (state.status) {
@@ -43,6 +44,8 @@ class HomeView extends StatelessWidget {
               return const _ProductsLoading();
             case ProductStatus.success:
               return _ProductSuccess(products: state.products);
+            case ProductStatus.sucessEmpty:
+              return const _ProductsSucessEmpty();
             default:
               return _ProductsFailure(error: state.errorMessage);
           }
@@ -75,6 +78,12 @@ class _ProductSuccessState extends State<_ProductSuccess> {
         if (state.status == ProductStatus.success) {
           _refreshController.loadComplete();
         }
+        if (state.status == ProductStatus.failureLoadingMore) {
+          _refreshController.loadFailed();
+        }
+        if (state.status == ProductStatus.sucessEmpty) {
+          _refreshController.loadNoData();
+        }
       },
       child: SmartRefresher(
         key: _refresherKey,
@@ -84,11 +93,6 @@ class _ProductSuccessState extends State<_ProductSuccess> {
         onLoading: () async {
           await Future.delayed(const Duration(seconds: 1));
           await context.read<ProductCubit>().getRangeProducts();
-          //if (mounted) {
-          //  setState(() {
-          //    _refreshController.loadComplete();
-          //  });
-          //}
         },
         child: ListView.builder(
           itemCount: widget.products.length,
@@ -127,6 +131,19 @@ class _ProductsLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: CircularProgressIndicator(),
+    );
+  }
+}
+
+class _ProductsSucessEmpty extends StatelessWidget {
+  const _ProductsSucessEmpty({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text("No hay nada para mostrar por ahora"),
     );
   }
 }
