@@ -11,16 +11,16 @@ enum ProductStatus {
 
 class ProductState extends Equatable {
   final ProductStatus status;
-  final List<Product> products;
+  final List<ProductRepository> products;
   final String errorMessage;
   const ProductState({
     this.status = ProductStatus.initial,
-    this.products = const <Product>[],
+    this.products = const <ProductRepository>[],
     this.errorMessage = "",
   });
   ProductState copyWith({
     ProductStatus? status,
-    List<Product>? products,
+    List<ProductRepository>? products,
     String? errorMessage,
   }) {
     return ProductState(

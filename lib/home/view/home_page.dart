@@ -1,7 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:bloc_app/home/cubit/product_cubit.dart';
-import 'package:bloc_app/home/models/product.dart';
 import 'package:bloc_app/home/widget/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,8 +34,8 @@ class HomeView extends StatelessWidget {
       ),
       body: BlocBuilder<ProductCubit, ProductState>(
         buildWhen: ((previous, current) {
-          return current.status != ProductStatus.loading; // &&
-          //current.status == ProductStatus.failureLoadingMore;
+          return current.status != ProductStatus.loading &&
+              current.status != ProductStatus.failureLoadingMore;
         }),
         builder: (context, state) {
           switch (state.status) {
@@ -60,7 +59,7 @@ class _ProductSuccess extends StatefulWidget {
     Key? key,
     required this.products,
   }) : super(key: key);
-  final List<Product> products;
+  final List<ProductRepository> products;
 
   @override
   State<_ProductSuccess> createState() => _ProductSuccessState();
@@ -91,15 +90,16 @@ class _ProductSuccessState extends State<_ProductSuccess> {
         enablePullDown: false,
         enablePullUp: true,
         onLoading: () async {
-          await Future.delayed(const Duration(seconds: 1));
-          await context.read<ProductCubit>().getRangeProducts();
+          //await Future.delayed(const Duration(seconds: 1));
+          context.read<ProductCubit>().getRangeProducts();
         },
         child: ListView.builder(
           itemCount: widget.products.length,
           itemBuilder: (context, index) {
             return ProductCard(
-              title: "Number $index",
+              title: "N.-$index - ${widget.products[index].title}",
               description: widget.products[index].description,
+              price: widget.products[index].price,
             );
           },
         ),

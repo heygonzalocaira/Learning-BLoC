@@ -22,6 +22,8 @@ class HttpRequestFailure implements Exception {
 // Exception for decode fail
 class JsonDecodeException implements Exception {}
 
+class JsonEmptyException implements Exception {}
+
 //
 class JsonDeserializationException implements Exception {}
 
@@ -40,7 +42,7 @@ class DataPlatziApiClient {
 
   Future<List<Product>> rangeProducts(int offset) async {
     final queryParams = <String, String>{'offset': offset.toString()}
-      ..addAll({'limit': '20'});
+      ..addAll({'limit': '50'});
     final uri = Uri.http(endPoint, '/api/v1/products', queryParams);
     return _fecthProducts(uri);
   }
@@ -58,6 +60,7 @@ class DataPlatziApiClient {
     }
     try {
       body = json.decode(response.body) as List;
+      if (body.isEmpty) throw JsonEmptyException();
     } on Exception {
       throw JsonDecodeException();
     }

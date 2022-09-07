@@ -4,11 +4,13 @@ class ProductCard extends StatelessWidget {
   const ProductCard({
     required this.title,
     required this.description,
+    required this.price,
     Key? key,
   }) : super(key: key);
 
   final String title;
   final String description;
+  final int price;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -20,7 +22,13 @@ class ProductCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(title),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(title),
+                  Text('Price \$ $price'),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
