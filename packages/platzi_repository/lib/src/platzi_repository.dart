@@ -63,6 +63,13 @@ class ProductsJsonEmpty extends PlatziException {
   }) : super(exception, stackTrace: stackTrace);
 }
 
+class ProductsLoadMoreData extends PlatziException {
+  ProductsLoadMoreData(
+    dynamic exception, {
+    required StackTrace stackTrace,
+  }) : super(exception, stackTrace: stackTrace);
+}
+
 class PlatziRepository {
   /// {@macro platzi_repository}
   PlatziRepository({DataPlatziApiClient? dataPlatziApiClient})
@@ -70,7 +77,7 @@ class PlatziRepository {
 
   final DataPlatziApiClient _dataPlatziApiClient;
   List<ProductRepository> get products => _products;
-  final List<ProductRepository> _products = [];
+  List<ProductRepository> _products = [];
   // Return a description of a product
   Future<String> simpleProductDescription({required int index}) async {
     try {
@@ -108,6 +115,7 @@ class PlatziRepository {
       final jsonProducts = products.map((item) => item.toJson()).toList();
       final productsProvider =
           jsonProducts.map(ProductRepository.fromJson).toList();
+
       _products.addAll(productsProvider);
     } on HttpException catch (e, stackTrace) {
       throw ProductsHttpException(e, stackTrace: stackTrace);
