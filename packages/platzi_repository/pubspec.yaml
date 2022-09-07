@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  json_annotation: ^4.6.0
   platzi_api:
     path: "../platzi_api"
 
@@ -16,3 +17,5 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   very_good_analysis: ^3.0.1
+  json_serializable: ^6.3.1
+  build_runner: ^2.0.0

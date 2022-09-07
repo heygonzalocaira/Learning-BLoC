@@ -3,6 +3,7 @@
 /// {@endtemplate}
 // ignore_for_file: public_member_api_docs, use_super_parameters
 import 'package:platzi_api/platzi_api.dart';
+import 'package:platzi_repository/platzi_repository.dart';
 
 class PlatziException implements Exception {
   const PlatziException(this.exception, {required this.stackTrace});
@@ -61,8 +62,8 @@ class PlatziRepository {
       : _dataPlatziApiClient = dataPlatziApiClient ?? DataPlatziApiClient();
 
   final DataPlatziApiClient _dataPlatziApiClient;
-  List<String> get products => _productsDescription;
-  List<String> _productsDescription = [];
+  List<ProductRepository> get products => _productsDescription;
+  List<ProductRepository> _productsDescription = [];
   // Return a description of a product
   Future<String> simpleProductDescription({required int index}) async {
     try {
@@ -93,13 +94,14 @@ class PlatziRepository {
   }
 
   // Return a range of products
-  Future<List<String>> rangeProducts() async {
-    List<Product> products;
+  Future<List<ProductRepository>> rangeProducts() async {
     try {
-      products =
+      final products =
           await _dataPlatziApiClient.rangeProducts(_productsDescription.length);
-      _productsDescription
-          .addAll(products.map((product) => product.description).toList());
+      final jsonProducts = products.map((item) => item.toJson()).toList();
+      final listProductProvider =
+          jsonProducts.map(ProductRepository.fromJson).toList();
+      _productsDescription.addAll(listProductProvider);
     } on HttpException catch (e, stackTrace) {
       throw AllProductsHttpException(e, stackTrace: stackTrace);
     } on HttpRequestFailure catch (e, stackTrace) {
